@@ -22,3 +22,13 @@ _testmain.go
 *.exe
 *.test
 *.prof
+
+abc.txt
+
+db/emulex.pdb
+
+node_modules
+
+out.txt
+
+ws/emulex.db

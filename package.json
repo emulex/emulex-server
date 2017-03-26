@@ -1,0 +1,44 @@
+{
+  "name": "emulex-server",
+  "version": "0.1.5",
+  "description": "A synchronous HTTP Client library for node.js",
+  "main": "lib/emulex.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/emulex/emulex-server.git"
+  },
+  "author": "Centny",
+  "license": "BSD",
+  "dependencies": {
+    "express": "^4.15.2",
+    "express-ws": "^3.0.0",
+    "libemulex-node": "../libemulex-node/",
+    "sqlite3": "^3.1.8"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "express": "^4.15.2",
+    "istanbul": "^0.4.5",
+    "jshint": "^2.9.4",
+    "mocha": "^3.2.0",
+    "optimist": "^0.6.1",
+    "supertest": "^3.0.0",
+    "websocket": "^1.0.24"
+  },
+  "scripts": {
+    "prj": "script/prj.sh",
+    "test": "node test/run.js",
+    "main": "node lib/main.js"
+  },
+  "bugs": {
+    "url": "https://github.com/emulex/emulex-server/issues"
+  },
+  "homepage": "https://github.com/emulex/emulex-server",
+  "directories": {
+    "test": "test"
+  },
+  "keywords": [
+    "emule",
+    "emulex"
+  ]
+}
