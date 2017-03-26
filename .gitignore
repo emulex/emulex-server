@@ -32,3 +32,5 @@ node_modules
 out.txt
 
 ws/emulex.db
+
+test/emulex.db

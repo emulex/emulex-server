@@ -6,13 +6,13 @@ var fs = require("fs");
 var WebSocketClient = require('websocket').client;
 describe('emulex', function () {
     var edb = null;
-    it("init", function (done) {
+    it("bootstrap", function (done) {
         try {
             fs.unlinkSync(__dirname + "/emulex.db");
         } catch (e) {
 
         }
-        emulex.bootemulex({
+        emulex.bootstrap({
             port: 4227,
             ed2k_port: 14227,
             dbpath: __dirname + "/emulex.db",
@@ -73,7 +73,7 @@ describe('emulex', function () {
             fs.unlinkSync("abc.txt");
         } catch (e) {
         }
-        emulex.addMonitor({
+        var monitor = {
             send: function (data) {
                 console.log("notify-->", data);
                 var vals = JSON.parse(data);
@@ -85,11 +85,12 @@ describe('emulex', function () {
                     listtask();
                 }
             }
-        });
+        };
+        emulex.addMonitor(monitor);
         //
         var addserver = function () {
             request(app)
-                .get("/exec/add_server?name=testing&addr=a.loc.w&port=4122&type=1&description=description")
+                .get("/exec/add_server?name=testing&addr=a.loc.w&port=4122&type=100&description=description")
                 .end(function (err, res) {
                     as.equal(err, null);
                     console.log(res.body);
@@ -135,6 +136,7 @@ describe('emulex', function () {
                     console.log(res.body, res.body.code);
                     as.equal(res.body.code, 0);
                     as.equal(res.body.servers.length, 1);
+                    emulex.removeMonitor(monitor);
                     done();
                 });
         };
@@ -152,5 +154,57 @@ describe('emulex', function () {
                 });
         };
         addserver();
+    });
+    it("shutdown", function (done) {
+        emulex.shutdown();
+        setTimeout(function () {
+            done();
+        }, 3000);
+    });
+    it("restart", function (done) {
+        emulex.bootstrap({
+            port: 4227,
+            ed2k_port: 14227,
+            dbpath: __dirname + "/emulex.db",
+        }, function (err, tdb) {
+            as.equal(err, null);
+            edb = tdb;
+        });
+        try {
+            fs.unlinkSync("abc.txt");
+        } catch (e) {
+        }
+        var monitor = {
+            send: function (data) {
+                console.log("notify-->", data);
+                var vals = JSON.parse(data);
+                if (vals.type == "ed2k_initialized") {
+                    searchfile();
+                } else if (vals.type == "finished_transfer") {
+                    emulex.shutdown();
+                    done();
+                }
+            }
+        };
+        emulex.addMonitor(monitor);
+        var searchfile = function () {
+            request(app)
+                .get("/exec/search_file?query=abc.txt&delay=1000&remote=0")
+                .end(function (err, res) {
+                    as.equal(err, null);
+                    console.log(res.body, res.body.code);
+                    as.equal(res.body.code, 0);
+                    as.equal(res.body.fs.length, 1);
+                    var file = res.body.fs[0];
+                    request(app)
+                        .get("/exec/add_task?hash=" + file.emd4 + "&filename=" + file.filename + "&location=.&size=" + file.size)
+                        .end(function (err, res) {
+                            as.equal(err, null);
+                            as.equal(res.body.code, 0);
+                            console.log(res.body);
+                            // done();
+                        });
+                });
+        };
     });
 });
