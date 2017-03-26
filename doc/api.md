@@ -233,15 +233,51 @@ success response
 	"servers": [
 		{
 			"tid": 1,
-			"name": 'testing',
-			"addr": 'a.loc.w',
+			"name": "testing",
+			"addr": "a.loc.w",
 			"port": 4122,
 			"type": 100,
-			"description": 'description',
+			"description": "description",
 			"tryc": 0,
 			"last": 0
 		}
 	],
 	"msg": 'OK'
+}
+```
+
+## Websocket
+
+### `ed2k_initialized`
+the ed2k server is initialized.
+
+**Arguments**
+
+* not arguments
+
+### `file_found`
+the remote search request is back.
+
+**Arguments**
+
+* not arguments
+
+### `finished_transfer`
+the transfer task is finished.
+
+**Arguments**
+
+* `name` the file name
+* `save_path` the save location.
+* `emd4` the ed2k md4 hash.
+* `size` the file size.
+
+```.json
+{
+	"type": "finished_transfer",
+	"name": "abc.txt",
+	"save_path": ".",
+	"emd4": "0C2BE0003F0DEBDCF644525BDAF6E45D",
+	"size": 7
 }
 ```
