@@ -28,7 +28,7 @@
   "scripts": {
     "prj": "script/prj.sh",
     "test": "node test/run.js",
-    "main": "node lib/main.js"
+    "main": "node bin/main.js"
   },
   "bugs": {
     "url": "https://github.com/emulex/emulex-server/issues"
