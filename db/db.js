@@ -44,7 +44,17 @@ function buildWhere(args) {
         if (key.charAt(0) == '_') {
             continue;
         }
-        if (typeof args[key] == "string") {
+        if (Object.prototype.toString.call(args[key]) == "[object Array]") {
+            var vals = "";
+            for (var i = 0; i < args[key].length; i++) {
+                if (typeof args[key][i] == "string") {
+                    vals += ",'" + args[key][i] + "'";
+                } else {
+                    vals += "," + args[key][i];
+                }
+            }
+            sql += " AND " + key + " IN (" + vals.substring(1) + ") ";
+        } else if (typeof args[key] == "string") {
             if (args["_" + key]) {
                 sql += " AND " + key + " " + args["_" + key] + " '" + args[key] + "' ";
             } else {

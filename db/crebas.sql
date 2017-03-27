@@ -158,13 +158,23 @@ create index ex_f_status on ex_file
 create table ex_server
 (
     tid integer primary key autoincrement,
+    uuid varchar(256),
     name varchar(256),
     addr varchar(256) not null,
     port int not null,
+    protocol int not null,
+    tags varchar(256),
     type int not null,
     description varchar(1024),
     tryc int,
     last int
+);
+/*==============================================================*/
+/* Index: ex_s_uuid                                             */
+/*==============================================================*/
+create index ex_s_uuid on ex_server
+(
+   uuid
 );
 /*==============================================================*/
 /* Index: ex_s_name                                             */
@@ -186,6 +196,13 @@ create index ex_s_addr on ex_server
 create index ex_s_port on ex_server
 (
    port
+);
+/*==============================================================*/
+/* Index: ex_s_tags                                             */
+/*==============================================================*/
+create index ex_s_tags on ex_server
+(
+   tags
 );
 /*==============================================================*/
 /* Index: ex_s_type                                             */
