@@ -1,0 +1,10 @@
+{
+  "name": "testplugin",
+  "version": "0.1.5",
+  "description": "test plugin",
+  "main": "lib/test.js",
+  "author": "Centny",
+  "license": "BSD",
+  "dependencies": {},
+  "devDependencies": {}
+}

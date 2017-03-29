@@ -34,3 +34,5 @@ out.txt
 ws/emulex.db
 
 test/emulex.db
+
+ws/plugins/emulex*

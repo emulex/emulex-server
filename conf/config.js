@@ -3,5 +3,6 @@ exports.conf = {
     ed2k_port: 14227,
     dbpath: "ws/emulex.db",
     ws_dir: "ws",
-    tmp: "ws/tmp"
+    tmp: "ws/tmp",
+    plugins_dir: "ws/plugins",
 };
