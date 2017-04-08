@@ -38,6 +38,13 @@ function checkEmulexDb(db, cback) {
         }
     });
 }
+function Raw(rval) {
+    this.val = rval;
+}
+Raw.prototype.toString = function () {
+    return this.val;
+};
+
 function buildWhere(args) {
     var sql = "";
     for (var key in args) {
@@ -62,9 +69,9 @@ function buildWhere(args) {
             }
         } else {
             if (args["_" + key]) {
-                sql += " AND " + key + " " + args["_" + key] + " " + args[key] + " ";
+                sql += " AND " + key + " " + args["_" + key] + " " + args[key].toString() + " ";
             } else {
-                sql += " AND " + key + "=" + args[key] + " ";
+                sql += " AND " + key + "=" + args[key].toString() + " ";
             }
         }
     }
@@ -168,3 +175,4 @@ function open(file, cback) {
     };
 }
 exports.open = open;
+exports.Raw = Raw;
