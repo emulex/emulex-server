@@ -36,3 +36,5 @@ ws/emulex.db
 test/emulex.db
 
 ws/plugins/emulex*
+
+out
