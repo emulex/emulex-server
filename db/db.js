@@ -67,11 +67,17 @@ function buildWhere(args) {
             } else {
                 sql += " AND " + key + " = '" + args[key] + "' ";
             }
-        } else {
+        } else if (typeof args[key] == "Raw") {
             if (args["_" + key]) {
                 sql += " AND " + key + " " + args["_" + key] + " " + args[key].toString() + " ";
             } else {
                 sql += " AND " + key + "=" + args[key].toString() + " ";
+            }
+        } else {
+            if (args["_" + key]) {
+                sql += " AND " + key + " " + args["_" + key] + " " + args[key] + " ";
+            } else {
+                sql += " AND " + key + "=" + args[key] + " ";
             }
         }
     }
@@ -133,6 +139,9 @@ function open(file, cback) {
                 return;
             }
             if (res.length) {
+                cback(null, {
+                    changes: 0,
+                });
                 return;
             }
             db.insert(name, vals, cback);
