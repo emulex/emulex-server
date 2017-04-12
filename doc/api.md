@@ -39,12 +39,102 @@ success response
 }
 ```
 
+### `/exec/pause_task`
+puase task, it will notify by websocket and pasue task is done.
+
+**Arguments**
+
+* `hash` the file hash
+
+**Reponse**
+
+* common code/data response
+
+fail response
+
+```.json
+{
+	"code": 1,
+	"msg": "hash argument is required"
+}
+```
+
+success response
+
+```.json
+{
+	"code": 0,
+	"msg": "OK"
+}
+```
+
+### `/exec/resume_task`
+resume task, it will notify by websocket and pasue task is done.
+
+**Arguments**
+
+* `hash` the file hash
+
+**Reponse**
+
+* common code/data response
+
+fail response
+
+```.json
+{
+	"code": 1,
+	"msg": "hash argument is required"
+}
+```
+
+success response
+
+```.json
+{
+	"code": 0,
+	"msg": "OK"
+}
+```
+
+### `/exec/remove_task`
+remove task, it will notify by websocket and pasue task is done.
+
+**Arguments**
+
+* `hash` the file hash
+
+**Reponse**
+
+* common code/data response
+
+fail response
+
+```.json
+{
+	"code": 1,
+	"msg": "hash argument is required"
+}
+```
+
+success response
+
+```.json
+{
+	"code": 0,
+	"msg": "OK"
+}
+```
+
 ### `/exec/list_task`
 list all task
 
 **Arguments**
 
-* not arguments
+* `status` the task status is on 100/120/200, split by comma.
+  * `100` the task is downloading
+  * `120` the task is paused.
+  * `200` the task is done.
 
 **Reponse**
 
@@ -262,7 +352,7 @@ the remote search request is back.
 
 * not arguments
 
-### `finished_transfer`
+### `transfer_status`
 the transfer task is finished.
 
 **Arguments**
@@ -271,6 +361,11 @@ the transfer task is finished.
 * `save_path` the save location.
 * `emd4` the ed2k md4 hash.
 * `size` the file size.
+* `status` the task status is on 100/120/200/-1.
+  * `100` the task is downloading
+  * `120` the task is paused.
+  * `200` the task is done.
+  * `-1` the task is removed.
 
 ```.json
 {
@@ -278,6 +373,7 @@ the transfer task is finished.
 	"name": "abc.txt",
 	"save_path": ".",
 	"emd4": "0C2BE0003F0DEBDCF644525BDAF6E45D",
-	"size": 7
+	"size": 7,
+	"status": 100
 }
 ```
