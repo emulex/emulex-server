@@ -209,9 +209,13 @@ search file
 * `used` the time of transfter used.
 * `task` whether the file is task.
 * `status` the file status is on 100/200/300
-  * `100` the file is downloading
+  * `10` the file is hashing. 
+  * `11` the file is hashing error.
+  * `100` the file is downloading.
+  * `120` the file is paused.
   * `200` the file is donwloaded.
   * `300` the file is other shared.
+  * `310` the file is self shared.
 
 fail response
 
@@ -253,6 +257,44 @@ success response
 }
 ```
 
+### `/exec/list_shared`
+list shared file
+
+**Arguments**
+
+* not arguments
+
+**Reponse**
+
+* all response is same of search file.
+
+### `/exec/share_files`
+share files
+
+**Arguments**
+
+* `path` the file path or directory to share
+* `isdir` the file path if directory, 0 is file path, 1 is directory.
+
+**Reponse**
+
+fail response
+
+```.json
+{
+	"code": 1,
+	"msg": "name argument is required"
+}
+```
+
+success response
+
+```.json
+{
+	"code": 0,
+	"msg": "OK"
+}
+```
 
 ### `/exec/add_server`
 add server to db

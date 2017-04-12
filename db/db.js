@@ -90,14 +90,19 @@ function open(file, cback) {
             cback(err, db);
         });
     });
-    db.search = function (name, args, cback) {
+    db.search = function (name, args, paged, cback) {
         var sql = "SELECT * FROM " + name + " F WHERE " + buildWhere(args);
+        if (cback) {
+            sql += " LIMIT " + paged.pn * paged.ps + "," + paged.ps;
+        } else {
+            cback = paged;
+        }
         if (db.showlog) {
             console.log("DB: execute search by " + sql);
         }
         db.all(sql, cback);
     };
-    db.add = function (name, args, cback) {
+    db.insert = function (name, args, cback) {
         var keys = "tid";
         var vals = "null";
         for (var key in args) {
@@ -120,27 +125,54 @@ function open(file, cback) {
             });
         });
     };
-    db.upsert = function (name, args, cback) {
-        var keys = "tid";
-        var vals = "null";
-        for (var key in args) {
-            if (typeof args[key] == "string") {
-                keys += "," + key;
-                vals += ",'" + args[key] + "'";
-            } else {
-                keys += "," + key;
-                vals += "," + args[key];
+    db.add = db.insert;
+    db.unique = function (name, args, vals, cback) {
+        db.search(name, args, function (err, res) {
+            if (err) {
+                cback(err, res);
+                return;
             }
-        }
-        var sql = "INSERT OR REPLACE INTO " + name + " (" + keys + ") VALUES (" + vals + ")";
-        if (db.showlog) {
-            console.log("DB: execute add by " + sql);
-        }
-        db.run(sql, function (err) {
-            cback(err, {
-                lastID: this.lastID,
-                changes: this.changes,
+            if (res.length) {
+                return;
+            }
+            db.insert(name, vals, cback);
+        });
+    };
+    db.upsert = function (name, args, update, cback) {
+        if (!cback) {
+            cback = update;
+            var keys = "tid";
+            var vals = "null";
+            for (var key in args) {
+                if (typeof args[key] == "string") {
+                    keys += "," + key;
+                    vals += ",'" + args[key] + "'";
+                } else {
+                    keys += "," + key;
+                    vals += "," + args[key];
+                }
+            }
+            sql = "INSERT OR REPLACE INTO " + name + " (" + keys + ") VALUES (" + vals + ")";
+            if (db.showlog) {
+                console.log("DB: execute add by " + sql);
+            }
+            db.run(sql, function (err) {
+                cback(err, {
+                    lastID: this.lastID,
+                    changes: this.changes,
+                });
             });
+            return;
+        }
+        this.update(name, args, update, function (err, res) {
+            if (err || res.changes) {
+                cback(err, res);
+                return;
+            }
+            for (var key in update) {
+                args[key] = update[key];
+            }
+            this.insert(name, args, cback);
         });
     };
     db.update = function (name, args, update, cback) {
